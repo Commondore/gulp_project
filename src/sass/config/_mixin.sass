@@ -1,0 +1,72 @@
+@function rem($px)
+	@return $px / 16px + 0rem
+
+=phone
+	@media screen and (min-width: $phone)
+		@content
+
+=tablet
+	@media screen and (min-width: $tablet)
+		@content
+
+=laptop
+	@media screen and (min-width: $laptop)
+		@content
+
+=desktop
+	@media screen and (min-width: $desktop)
+		@content
+
+=media($size)
+	@media screen and (min-width: $size)
+		@content
+
+=use-font($family, $size: null, $color: null, $weight: null, $lh: null)
+	font-family: $family, sans-serif
+	font-size: $size
+	color: $color
+	font-weight: $weight
+	line-height: $lh
+
+=placeholder
+	&::-webkit-input-placeholder
+		@content
+	&:-moz-placeholder
+		@content
+	&::-moz-placeholder
+		@content
+	&::-ms-input-placeholder
+		@content
+
+=flex($main: null, $cross: null, $wrap: null, $dir: null)
+	display: flex
+	flex-wrap: $wrap
+	flex-direction: $dir
+	justify-content: $main
+	align-items: $cross
+
+=grid-col($count, $dir: column)
+	@for $i from 1 through $count
+		&-#{$i}
+			grid-#{$dir}: span $i
+
+=img-fit($height: 100%)
+	width: 100%
+	height: $height
+	object-fit: cover
+
+=pos-overlay($bg: null)
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	background: $bg
+
+
+=grid($columns, $rows: null, $auto: null, $gap: null)
+	display: grid
+	grid-template-columns: $columns
+	grid-template-rows: $rows
+	grid-auto-rows: $auto
+	gap: $gap

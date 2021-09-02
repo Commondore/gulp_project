@@ -1,0 +1,26 @@
+html, body
+	margin: 0
+	padding: 0
+	width: 100%
+	height: 100%
+html
+	// scroll-behavior: smooth
+
+body
+	font: 1rem/1.3 $font, sans-serif
+	color: $dark
+
+*, *:before, *:after
+	box-sizing: border-box
+
+.wrapper
+	position: relative
+	min-height: 100vh
+	overflow: hidden
+	display: flex
+	flex-direction: column
+
+.container
+	margin: 0 auto
+	max-width: $width
+	padding: 0 $gutter
