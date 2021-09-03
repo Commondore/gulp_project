@@ -1,32 +1,39 @@
-const { src, dest, watch, series, parallel } = require("gulp");
-const sass = require("gulp-sass");
-const cleanCSS = require("gulp-clean-css");
-const rename = require("gulp-rename");
-const sourcemaps = require("gulp-sourcemaps");
-const gulpIf = require("gulp-if");
+import gulp from "gulp";
+const { src, dest, watch, series, parallel } = gulp;
 
-const pug = require("gulp-pug");
-const notify = require("gulp-notify");
-const plumber = require("gulp-plumber");
+import gulpSass from "gulp-sass";
+import nodeSass from "node-sass";
+const sass = gulpSass(nodeSass);
+
+import cleanCSS from "gulp-clean-css";
+import rename from "gulp-rename";
+import sourcemaps from "gulp-sourcemaps";
+import gulpIf from "gulp-if";
+
+import pug from "gulp-pug";
+import notify from "gulp-notify";
+import plumber from "gulp-plumber";
 
 // images optimization
-const imagemin = require("gulp-imagemin");
-const imageminPngquant = require("imagemin-pngquant");
-const imageminZopfli = require("imagemin-zopfli");
-const imageminMozjpeg = require("imagemin-mozjpeg");
-const imageminGiflossy = require("imagemin-giflossy");
+import imagemin from "gulp-imagemin";
+import imageminPngquant from "imagemin-pngquant";
+import imageminZopfli from "imagemin-zopfli";
+import imageminMozjpeg from "imagemin-mozjpeg";
+import imageminGiflossy from "imagemin-giflossy";
+import imageminSvgo from "imagemin-svgo";
 
-const svgSymbols = require("gulp-svg-symbols");
+import svgSymbols from "gulp-svg-symbols";
 
-const ttf2woff2 = require("gulp-ttf2woff2");
+import ttf2woff2 from "gulp-ttf2woff2";
 
-const uglify = require("gulp-uglify");
-const del = require("del");
+import uglify from "gulp-uglify";
+import del from "del";
 
-const browserSync = require("browser-sync").create();
-const devip = require("dev-ip");
+import browserSync from "browser-sync";
+const brSync = browserSync.create();
+import devip from "dev-ip";
 
-const webpackStream = require("webpack-stream");
+import webpackStream from "webpack-stream";
 
 // check prod or dev
 const isDevelopment = !(process.argv[2] === "build");
@@ -54,7 +61,7 @@ const path = {
 };
 
 function liveReload(done) {
-  browserSync.init({
+  brSync.init({
     server: {
       baseDir: path.build.root,
     },
@@ -64,14 +71,14 @@ function liveReload(done) {
   done();
 }
 
-async function clean() {
+export async function clean() {
   return await del.sync(path.build.root);
 }
 
 function html() {
   return src(path.dev.html)
     .pipe(dest(path.build.root))
-    .pipe(browserSync.stream());
+    .pipe(brSync.stream());
 }
 
 function pugTask() {
@@ -92,7 +99,7 @@ function pugTask() {
       })
     )
     .pipe(dest(path.build.root))
-    .pipe(browserSync.stream());
+    .pipe(brSync.stream());
 }
 
 function styles() {
@@ -122,7 +129,7 @@ function styles() {
     )
     .pipe(gulpIf(isDevelopment, sourcemaps.write()))
     .pipe(dest(path.build.css))
-    .pipe(browserSync.stream());
+    .pipe(brSync.stream());
 }
 
 function scripts() {
@@ -138,13 +145,13 @@ function scripts() {
               test: /\.(js)$/,
               exclude: /(node_modules)/,
               loader: "babel-loader",
-              query: {
+              options: {
                 presets: ["@babel/env"],
               },
             },
           ],
         },
-        mode: isDevelopment ? "development" : "production"
+        mode: isDevelopment ? "development" : "production",
       })
     )
     .pipe(gulpIf(isDevelopment, uglify()))
@@ -154,7 +161,7 @@ function scripts() {
       })
     )
     .pipe(dest(path.build.js))
-    .pipe(browserSync.stream());
+    .pipe(brSync.stream());
 }
 
 function imagesBuild() {
@@ -177,7 +184,7 @@ function imagesBuild() {
           progressive: true,
           quality: 70,
         }),
-        imagemin.svgo({
+        imageminSvgo({
           plugins: [
             { removeViewBox: false },
             { removeUnusedNS: false },
@@ -224,20 +231,13 @@ function watcher(done) {
   done();
 }
 
-exports.styles = styles;
-exports.watcher = watcher;
-exports.scripts = scripts;
-exports.images = images;
-exports.html = html;
-exports.fonts = fonts;
-exports.clean = clean;
-
-exports.build = series(
+export const build = series(
   clean,
   parallel(pugTask, styles, scripts, imagesBuild, sprite, fonts)
 );
 
-exports.default = series(
+
+export default series(
   clean,
   parallel(pugTask, styles, scripts, images, sprite, fonts),
   liveReload,
