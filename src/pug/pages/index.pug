@@ -1,4 +1,21 @@
 extends ../template
 
 block main
-	h1 Hello GULP
+	.container
+		.swiper#main-slide
+			.swiper-wrapper
+				.swiper-slide
+					img.slider__image(src="img/services/service01.jpg", alt="")
+				.swiper-slide
+					img.slider__image(src="img/services/service02.jpg", alt="")
+				.swiper-slide
+					img.slider__image(src="img/services/service03.jpg", alt="")
+				.swiper-slide
+					img.slider__image(src="img/services/service04.jpg", alt="")
+				.swiper-slide
+					img.slider__image(src="img/services/service05.jpg", alt="")
+
+			.swiper-button-prev
+			.swiper-button-next
+
+			.swiper-pagination
